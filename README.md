@@ -32,3 +32,6 @@
 - docker-compose exec web python manage.py load_ingredients
 - docker-compose exec web python manage.py createsuperuser
 
+# В проекте реализовано немножечко тестов
+
+- Запуск по команде pytest
