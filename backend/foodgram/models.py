@@ -39,17 +39,10 @@ class Ingredient(models.Model):
         help_text="Введите название ингредиента."
     )
 
-    CHOICES = (
-        ("кг", "килограмм"),
-        ("г", "грамм"),
-        ("л", "литров"),
-        ("мл", "милилитров"),)
-
     measurement_unit = models.CharField(
         max_length=10,
         verbose_name="Единицы измерения",
         help_text="Введите единицы измерения",
-        choices=CHOICES
     )
 
     class Meta:
@@ -156,6 +149,10 @@ class IngredientInRecipe(models.Model):
     class Meta:
         verbose_name = "Количетсво ингредиента в рецепте"
         verbose_name_plural = verbose_name
+        constraints = [
+            models.UniqueConstraint(fields=['ingredient', 'recipe'],
+                                    name='unique_amount')
+        ]
 
 
 class Favorite(models.Model):
@@ -177,7 +174,10 @@ class Favorite(models.Model):
         ordering = ["-when_added"]
         verbose_name = "Список покупок"
         verbose_name_plural = verbose_name
-        unique_together = ("user", "recipe")
+        constraints = [
+            models.UniqueConstraint(fields=['user', 'recipe'],
+                                    name='unique_favorite')
+        ]
 
     def __str__(self):
         return f"{self.user} added {self.recipe}"
@@ -201,7 +201,10 @@ class ShoppingCart(models.Model):
     class Meta:
         verbose_name = "Список покупок"
         verbose_name_plural = verbose_name
-        unique_together = ("user", "recipe")
+        constraints = [
+            models.UniqueConstraint(fields=['user', 'recipe'],
+                                    name='unique_cart')
+        ]
 
     def __str__(self):
         return f"{self.user} added {self.recipe}"

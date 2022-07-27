@@ -24,10 +24,12 @@ urlpatterns = [
     path(
         "recipes/<int:recipe_id>/favorite/",
         FavoriteView.as_view(),
+        name="favorite",
     ),
     path(
         "recipes/<int:recipe_id>/shopping_cart/",
         ShoppingCartViewSet.as_view(),
+        name="shopping_cart",
     ),
     path("", include(router.urls)),
 ]
