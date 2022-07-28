@@ -80,12 +80,12 @@ class ShoppingCartViewSet(APIView):
     serializer_class = serializers.ShoppingCartSerializer
     filterset_class = RecipeFilter
 
-    @action(methods=["post", ], detail=False,)
+    @action(methods=["post", ], detail=True,)
     def post(self, request, recipe_id):
         return custom_post(self, request, recipe_id,
                            serializers.ShoppingCartSerializer, "recipe")
 
-    @action(method=["delete", ], detail=False,)
+    @action(method=["delete", ], detail=True,)
     def delete(self, request, recipe_id):
         return custom_delete(self, request, recipe_id, models.ShoppingCart)
 

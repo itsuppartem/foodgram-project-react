@@ -2,7 +2,6 @@ from drf_extra_fields.fields import Base64ImageField
 from rest_framework import serializers
 from rest_framework.validators import UniqueTogetherValidator
 
-
 from users.serializers import CustomUserSerializer
 from . import models
 
@@ -111,13 +110,13 @@ class CreateRecipeSerializer(serializers.ModelSerializer):
         ]
 
     def validate_ingredients(self, data):
-        ingredients = self.initial_data.get("ingredients")
+        ingredients = data['ingredients']
+        ingredients_list = []
         for ingredient in ingredients:
-            if ingredients.count(ingredient) > 1:
-                id = ingredient["id"]
-                name = models.IngredientInRecipe.objects.all().get(id=id).name
+            ingredient_id = ingredient['id']
+            if ingredient_id in ingredients_list:
                 raise serializers.ValidationError(
-                    {f"{name}": f"{name} уже есть в списке"})
+                    {"Ингридиент уже есть в списке"})
         return data
 
     def validate_cooking_time(self, data):
@@ -139,7 +138,6 @@ class CreateRecipeSerializer(serializers.ModelSerializer):
         tags_data = validated_data.pop('tags')
         recipe = models.Recipe.objects.create(author=request.user,
                                               **validated_data)
-        recipe.save()
         recipe.tags.set(tags_data)
         self.create_bulk(recipe, ingredients_data)
         return recipe
@@ -151,8 +149,6 @@ class CreateRecipeSerializer(serializers.ModelSerializer):
         models.IngredientInRecipe.objects.filter(recipe=instance).delete()
         self.create_bulk(instance, ingredients_data)
         instance.tags.set(tags_data)
-
-        instance.save()
         return super().update(instance, validated_data)
 
 
