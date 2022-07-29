@@ -64,12 +64,10 @@ class FavoriteView(APIView):
         user = self.request.user
         return models.Favorite.objects.filter(user=user)
 
-    @action(methods=["post", ], detail=True,)
     def post(self, request, recipe_id):
         return custom_post(self, request,
                            recipe_id, serializers.FavoriteSerializer, "recipe")
 
-    @action(methods=["delete", ], detail=True,)
     def delete(self, request, recipe_id):
         return custom_delete(self, request, recipe_id, models.Favorite)
 
@@ -80,12 +78,10 @@ class ShoppingCartViewSet(APIView):
     serializer_class = serializers.ShoppingCartSerializer
     filterset_class = RecipeFilter
 
-    @action(methods=["post", ], detail=True,)
     def post(self, request, recipe_id):
         return custom_post(self, request, recipe_id,
                            serializers.ShoppingCartSerializer, "recipe")
 
-    @action(method=["delete", ], detail=True,)
     def delete(self, request, recipe_id):
         return custom_delete(self, request, recipe_id, models.ShoppingCart)
 

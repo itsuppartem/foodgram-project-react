@@ -116,7 +116,7 @@ class CreateRecipeSerializer(serializers.ModelSerializer):
             ingredient_id = ingredient['id']
             if ingredient_id in ingredients_list:
                 raise serializers.ValidationError(
-                    {"Ингридиент уже есть в списке"})
+                    {"Ингредиент уже есть в списке"})
         return data
 
     def validate_cooking_time(self, data):
