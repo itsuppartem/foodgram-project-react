@@ -70,6 +70,8 @@ class CustomUserViewSet(viewsets.ModelViewSet):
         elif request.method == "DELETE":
             follow.delete()
             return Response("Удалено", status=status.HTTP_204_NO_CONTENT)
+        else:
+            return None
 
     @action(
         methods=["get"],
