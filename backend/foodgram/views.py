@@ -1,18 +1,17 @@
-from django_filters.rest_framework import DjangoFilterBackend
-from django.http import HttpResponse
-from django.db.models import F, Sum
 from django.contrib.auth import get_user_model
+from django.db.models import F, Sum
+from django.http import HttpResponse
+from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework import viewsets
-from rest_framework.permissions import (AllowAny,
-                                        IsAuthenticatedOrReadOnly,)
+from rest_framework.decorators import api_view, permission_classes
 from rest_framework.pagination import PageNumberPagination
-from rest_framework.decorators import api_view, action, permission_classes
+from rest_framework.permissions import AllowAny, IsAuthenticatedOrReadOnly
 from rest_framework.views import APIView
 
 from . import models, serializers
 from .filters import IngredientFilter, RecipeFilter
 from .permissions import IsOwnerOrReadOnly
-from .utils import (custom_delete, custom_post,)
+from .utils import custom_delete, custom_post
 
 User = get_user_model()
 

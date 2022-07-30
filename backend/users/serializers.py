@@ -4,7 +4,7 @@ from rest_framework.authtoken.models import Token
 from rest_framework.validators import UniqueTogetherValidator
 
 from . import models
-from foodgram.models import Recipe
+import foodgram.models
 
 User = get_user_model()
 
@@ -26,7 +26,7 @@ class PasswordSerializer(serializers.Serializer):
 
 class BaseRecipeSerializer(serializers.ModelSerializer):
     class Meta:
-        model = Recipe
+        model = foodgram.models.Recipe
         fields = (
             "id",
             "name",
@@ -96,5 +96,4 @@ class RepresentationFollowerSerializer(serializers.ModelSerializer):
         ).exists()
 
     def get_recipes_count(self, obj):
-        count = obj.recipes.all().count()
-        return count
+        return obj.recipes.all().count()

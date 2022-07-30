@@ -2,7 +2,7 @@ from django.shortcuts import get_object_or_404
 from rest_framework import status
 from rest_framework.response import Response
 
-from foodgram.models import Recipe
+from .models import Recipe
 
 
 def custom_post(self, request, id, custom_serializer, field):
