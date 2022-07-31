@@ -109,21 +109,6 @@ class CreateRecipeSerializer(serializers.ModelSerializer):
             "cooking_time",
         ]
 
-    def validate_ingredients(self, data):
-        ingredients = data['ingredients']
-        ingredients_list = []
-        for ingredient in ingredients:
-            ingredient_id = ingredient['id']
-            if ingredient_id in ingredients_list:
-                raise serializers.ValidationError(
-                    {"Ингредиент уже есть в списке"})
-        return data
-
-    def validate_cooking_time(self, data):
-        if data <= 0:
-            raise serializers.ValidationError("Введите число больше 0")
-        return data
-
     def create_bulk(self, recipe, ingredients_data):
         models.IngredientInRecipe.objects.bulk_create(
             [models.IngredientInRecipe(
@@ -150,6 +135,19 @@ class CreateRecipeSerializer(serializers.ModelSerializer):
         self.create_bulk(instance, ingredients_data)
         instance.tags.set(tags_data)
         return super().update(instance, validated_data)
+
+    def validate_ingredients(self, data):
+        ingredients_list = []
+        for ingredient in data:
+            if ingredient in ingredients_list:
+                raise serializers.ValidationError(
+                    {"Ингредиент уже есть в списке"})
+        return data
+
+    def validate_cooking_time(self, data):
+        if data <= 0:
+            raise serializers.ValidationError("Введите число больше 0")
+        return data
 
 
 class FavoriteSerializer(serializers.ModelSerializer):
