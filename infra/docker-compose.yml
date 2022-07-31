@@ -25,6 +25,7 @@ services:
       dockerfile: Dockerfile
     volumes:
       - ./frontend/:/app/result_build/
+      
   nginx:
     image: nginx:1.21.3-alpine
     ports:
