@@ -60,6 +60,7 @@ jobs:
         key: ${{ secrets.SSH_KEY }}
         passphrase: ${{ secrets.PASSPHRASE }}
         script: |
+            cd /home/itsuppartem/
             sudo docker-compose stop
             sudo docker-compose rm backend
             sudo docker pull ${{ secrets.DOCKER_USERNAME }}/foodgram_backend:latest
