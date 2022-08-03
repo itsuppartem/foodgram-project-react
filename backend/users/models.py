@@ -25,6 +25,11 @@ class User(AbstractUser):
         "Фамилия",
         max_length=150,
     )
+    is_subscribed = models.BooleanField(
+        default=False,
+        verbose_name='Подписка на данного пользователя',
+        help_text='Отметьте для подписки на данного пользователя'
+    )
 
 
 class Follow(models.Model):
@@ -32,7 +37,7 @@ class Follow(models.Model):
         User,
         on_delete=models.CASCADE,
         related_name="follower")
-    following = models.ForeignKey(
+    author = models.ForeignKey(
         User,
         on_delete=models.CASCADE,
         related_name="following")
@@ -41,9 +46,9 @@ class Follow(models.Model):
         verbose_name = "Фоллоу"
         verbose_name_plural = "Фоллоус"
         constraints = [
-            models.UniqueConstraint(fields=['user', 'following'],
+            models.UniqueConstraint(fields=['user', 'author'],
                                     name='unique_follow')
         ]
 
     def __str__(self):
-        return f'{self.following} {self.user}'
+        return f'{self.author} {self.user}'

@@ -10,8 +10,6 @@ services:
   web:
     image: itsuppartem/foodgram_backend:latest
     restart: always
-    ports:
-      - "8000:8000"
     volumes:
       - backend_static:/app/backend_static/
       - media_value:/app/media/

@@ -1,8 +1,8 @@
 from drf_extra_fields.fields import Base64ImageField
 from rest_framework import serializers
-from rest_framework.validators import UniqueTogetherValidator
+from rest_framework.validators import UniqueTogetherValidator, ValidationError
 
-from users.serializers import CustomUserSerializer
+from users.serializers import CustomUserManipulateSerializer
 from . import models
 
 
@@ -37,7 +37,7 @@ class IngredientSerializer(serializers.ModelSerializer):
 class ShowRecipeSerializer(serializers.ModelSerializer):
     tags = TagSerializer(read_only=True, many=True)
     image = Base64ImageField()
-    author = CustomUserSerializer(read_only=True)
+    author = CustomUserManipulateSerializer(read_only=True)
     ingredients = IngredientInRecipeSerializer(
         source="ingredients_amount",
         many=True
@@ -90,7 +90,7 @@ class AddIngredientToRecipeSerializer(serializers.ModelSerializer):
 
 class CreateRecipeSerializer(serializers.ModelSerializer):
     image = Base64ImageField(max_length=None, use_url=True)
-    author = CustomUserSerializer(read_only=True)
+    author = CustomUserManipulateSerializer(read_only=True)
     ingredients = AddIngredientToRecipeSerializer(many=True)
     cooking_time = serializers.IntegerField()
     tags = serializers.SlugRelatedField(
@@ -108,6 +108,22 @@ class CreateRecipeSerializer(serializers.ModelSerializer):
             "text",
             "cooking_time",
         ]
+
+    def validate(self, data):
+        ingredients = self.initial_data.get('ingredients')
+        ingredients_list = []
+        for ingredient in ingredients:
+            ingredient_id = ingredient['id']
+            if ingredient_id in ingredients_list:
+                raise ValidationError(
+                    'Есть задублированные ингредиенты!'
+                )
+            ingredients_list.append(ingredient_id)
+        if data['cooking_time'] <= 0:
+            raise ValidationError(
+                'Время приготовления должно быть больше 0!'
+            )
+        return data
 
     def create_bulk(self, recipe, ingredients_data):
         models.IngredientInRecipe.objects.bulk_create(
@@ -135,19 +151,6 @@ class CreateRecipeSerializer(serializers.ModelSerializer):
         self.create_bulk(instance, ingredients_data)
         instance.tags.set(tags_data)
         return super().update(instance, validated_data)
-
-    def validate_ingredients(self, data):
-        ingredients_list = []
-        for ingredient in data:
-            if ingredient in ingredients_list:
-                raise serializers.ValidationError(
-                    {"Ингредиент уже есть в списке"})
-        return data
-
-    def validate_cooking_time(self, data):
-        if data <= 0:
-            raise serializers.ValidationError("Введите число больше 0")
-        return data
 
 
 class FavoriteSerializer(serializers.ModelSerializer):

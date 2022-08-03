@@ -4,12 +4,12 @@ from django.http import HttpResponse
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework import viewsets
 from rest_framework.decorators import api_view, permission_classes
-from rest_framework.pagination import PageNumberPagination
 from rest_framework.permissions import AllowAny, IsAuthenticatedOrReadOnly
 from rest_framework.views import APIView
 
 from . import models, serializers
 from .filters import IngredientFilter, RecipeFilter
+from .pagination import CartCustomPagination
 from .permissions import IsOwnerOrReadOnly
 from .utils import custom_delete, custom_post
 
@@ -37,7 +37,7 @@ class RecipeView(viewsets.ModelViewSet):
     serializer_class = serializers.CreateRecipeSerializer
     permissions = (IsOwnerOrReadOnly,)
     filterset_class = RecipeFilter
-    pagination_class = PageNumberPagination
+    pagination_class = CartCustomPagination
 
     def get_serializer_class(self):
         if self.request.method == "POST":
@@ -56,7 +56,7 @@ class FavoriteView(APIView):
     permission_classes = [
         IsAuthenticatedOrReadOnly,
     ]
-    pagination_class = None
+    pagination_class = CartCustomPagination
     filter_backends = (DjangoFilterBackend,)
 
     def get_queryset(self):
@@ -73,9 +73,10 @@ class FavoriteView(APIView):
 
 class ShoppingCartViewSet(APIView):
     permission_classes = [IsAuthenticatedOrReadOnly, ]
-    pagination_class = None
     serializer_class = serializers.ShoppingCartSerializer
     filterset_class = RecipeFilter
+    pagination_class = CartCustomPagination
+    queryset = models.ShoppingCart.objects.all()
 
     def post(self, request, recipe_id):
         return custom_post(self, request, recipe_id,

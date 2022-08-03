@@ -1,4 +1,4 @@
-from django.contrib.auth import get_user_model
+from djoser.serializers import UserCreateSerializer
 from rest_framework import serializers
 from rest_framework.authtoken.models import Token
 from rest_framework.validators import UniqueTogetherValidator
@@ -6,13 +6,33 @@ from rest_framework.validators import UniqueTogetherValidator
 from foodgram.models import Recipe
 from . import models
 
-User = get_user_model()
-
 
 class CustomUserSerializer(serializers.ModelSerializer):
     class Meta:
-        model = User
+        model = models.User
         fields = ["id", "username", "email", "first_name", "last_name", ]
+
+
+class CustomUserManipulateSerializer(UserCreateSerializer):
+    is_subscribed = serializers.SerializerMethodField()
+
+    class Meta:
+        fields = (
+            "email",
+            "id",
+            "username",
+            "first_name",
+            "last_name",
+            "password",
+            "is_subscribed",
+        )
+        model = models.User
+
+    def get_is_subscribed(self, obj):
+        """Статус подписки на автора."""
+        user_id = self.context.get('request').user.id
+        return models.Follow.objects.filter(
+            author=obj.id, user=user_id).exists()
 
 
 class PasswordSerializer(serializers.Serializer):
@@ -20,7 +40,7 @@ class PasswordSerializer(serializers.Serializer):
     current_password = serializers.CharField(required=True)
 
     class Meta:
-        model = User
+        model = models.User
         fields = "__all__"
 
 
@@ -44,38 +64,36 @@ class TokenSerializer(serializers.ModelSerializer):
 
 
 class FollowerSerializer(serializers.ModelSerializer):
-    user = serializers.PrimaryKeyRelatedField(
-        queryset=models.User.objects.all()
-    )
-    following = serializers.PrimaryKeyRelatedField(
-        queryset=models.User.objects.all()
-    )
-
     def validate(self, data):
         user = data.get("user")
-        following = data.get("following")
-        if user == following:
+        author = data.get("author")
+        if user == author:
             raise serializers.ValidationError("Невозможно подписаться на себя")
         return data
 
     class Meta:
-        fields = ("user", "following")
+        fields = ("user", "author")
         model = models.Follow
         validators = [
             UniqueTogetherValidator(
                 queryset=models.Follow.objects.all(),
-                fields=["user", "following"],
+                fields=["user", "author"],
             )
         ]
 
 
 class RepresentationFollowerSerializer(serializers.ModelSerializer):
-    recipes = BaseRecipeSerializer(many=True, required=True)
-    is_subscribed = serializers.SerializerMethodField("check_if_is_subscribed")
-    recipes_count = serializers.SerializerMethodField("get_recipes_count")
+    id = serializers.ReadOnlyField(source="author.id")
+    email = serializers.ReadOnlyField(source="author.email")
+    username = serializers.ReadOnlyField(source="author.username")
+    first_name = serializers.ReadOnlyField(source="author.first_name")
+    last_name = serializers.ReadOnlyField(source="author.last_name")
+    is_subscribed = serializers.SerializerMethodField()
+    recipes = serializers.SerializerMethodField()
+    recipes_count = serializers.SerializerMethodField()
 
     class Meta:
-        model = User
+        model = models.Follow
         fields = [
             "email",
             "id",
@@ -87,13 +105,21 @@ class RepresentationFollowerSerializer(serializers.ModelSerializer):
             "recipes_count",
         ]
 
-    def check_if_is_subscribed(self, obj):
-        request = self.context.get("request")
-        if request is None or request.user.is_anonymous:
-            return False
+    def get_is_subscribed(self, obj):
+        """Статус подписки на автора."""
+        user = self.context.get('request').user
         return models.Follow.objects.filter(
-            user=request.user, following=obj
-        ).exists()
+            author=obj.author, user=user).exists()
+
+    def get_recipes(self, obj):
+        request = self.context.get("request")
+        limit = request.GET.get("recipes_limit")
+        if limit is not None:
+            queryset = Recipe.objects.filter(author=obj.author)[:int(limit)]
+        else:
+            queryset = obj.author.recipe_set.all()
+        return BaseRecipeSerializer(queryset, many=True).data
 
     def get_recipes_count(self, obj):
-        return obj.recipes.all().count()
+        author = obj.author
+        return Recipe.objects.filter(author=author).count()

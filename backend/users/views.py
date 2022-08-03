@@ -1,26 +1,24 @@
-from django.contrib.auth import get_user_model
 from django.contrib.auth.hashers import make_password
 from django.shortcuts import get_object_or_404
 from rest_framework import status, viewsets
 from rest_framework.decorators import action
-from rest_framework.pagination import PageNumberPagination
 from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework.response import Response
 
-from .models import Follow
-from .serializers import (CustomUserSerializer, FollowerSerializer,
-                          PasswordSerializer, RepresentationFollowerSerializer)
-
-User = get_user_model()
+from foodgram.pagination import CartCustomPagination
+from .models import Follow, User
+from .serializers import (CustomUserManipulateSerializer, CustomUserSerializer,
+                          FollowerSerializer, PasswordSerializer,
+                          RepresentationFollowerSerializer)
 
 
 class CustomUserViewSet(viewsets.ModelViewSet):
     queryset = User.objects.all()
-    serializer_class = CustomUserSerializer
+    serializer_class = CustomUserManipulateSerializer
     permission_classes = [
         AllowAny,
     ]
-    pagination_class = None
+    pagination_class = CartCustomPagination
 
     @action(
         methods=["get"], detail=False, permission_classes=[IsAuthenticated]
@@ -59,19 +57,16 @@ class CustomUserViewSet(viewsets.ModelViewSet):
     )
     def subscribe(self, request, pk=None):
         user = request.user
-        following = get_object_or_404(User, pk=pk)
-        follow = Follow.objects.filter(user=user, following=following)
-        data = {"user": user.id, "following": following.id, }
+        author = get_object_or_404(User, pk=pk)
+        follow = Follow.objects.filter(user=user, author=author)
+        data = {"user": user.id, "author": author.id, }
         if request.method == "POST":
             serializer = FollowerSerializer(data=data, context=request)
             serializer.is_valid(raise_exception=True)
             serializer.save()
             return Response(serializer.data, status=status.HTTP_201_CREATED)
-        elif request.method == "DELETE":
-            follow.delete()
-            return Response("Удалено", status=status.HTTP_204_NO_CONTENT)
-        else:
-            return None
+        follow.delete()
+        return Response("Удалено", status=status.HTTP_204_NO_CONTENT)
 
     @action(
         methods=["get"],
@@ -79,10 +74,10 @@ class CustomUserViewSet(viewsets.ModelViewSet):
         permission_classes=[IsAuthenticated],
     )
     def subscriptions(self, request):
-        user_obj = User.objects.filter(following__user=request.user)
-        paginator = PageNumberPagination()
-        paginator.page_size = 6
-        result_page = paginator.paginate_queryset(user_obj, request)
+        user = request.user
+        queryset = user.follower.all()
+        pages = self.paginate_queryset(queryset)
         serializer = RepresentationFollowerSerializer(
-            result_page, many=True, context={'current_user': request.user})
-        return paginator.get_paginated_response(serializer.data)
+            pages, many=True, context={"request": request}
+        )
+        return self.get_paginated_response(serializer.data)
