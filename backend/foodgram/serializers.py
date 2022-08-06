@@ -5,7 +5,10 @@ from rest_framework.validators import UniqueTogetherValidator, ValidationError
 from users.serializers import CustomUserManipulateSerializer
 from . import models
 
-#this block converts information stored in a database, defined using Django models, into a format that is easily and efficiently passed through an API.
+# this block converts information stored in a database,
+# defined using Django models, into a format that
+# is easily and efficiently passed through an API.
+
 
 class TagSerializer(serializers.ModelSerializer):
     class Meta:

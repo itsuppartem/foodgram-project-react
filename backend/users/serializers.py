@@ -6,7 +6,9 @@ from rest_framework.validators import UniqueTogetherValidator
 from foodgram.models import Recipe
 from . import models
 
-#converts information stored in a database, defined using Django models, into a format that is easily and efficiently passed through an API.
+# converts information stored in a database, defined using Django
+# models, into a format that is easily and efficiently passed through an API.
+
 
 class CustomUserSerializer(serializers.ModelSerializer):
 
@@ -69,7 +71,7 @@ class FollowerSerializer(serializers.ModelSerializer):
         user = data.get("user")
         author = data.get("author")
         if user == author:
-            raise serializers.ValidationError("You can not subcribe to yourself!")
+            raise serializers.ValidationError("You cant subcribe to yourself!")
         return data
 
     class Meta:

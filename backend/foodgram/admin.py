@@ -2,7 +2,8 @@ from django.contrib import admin
 
 from . import models
 
-#Provides a quick, model-centric interface, that does not need to specify any fields or make custom parameters
+# Provides a quick, model-centric interface, that does not need to
+# specify any fields or make custom parameters
 admin.site.register(models.Tag)
 admin.site.register(models.IngredientInRecipe)
 

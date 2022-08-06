@@ -105,7 +105,8 @@ class ShoppingCartView(APIView):
     def delete(self, request, recipe_id):
         return custom_delete(self, request, recipe_id, models.ShoppingCart)
 
-#Action for downloading a buying list, processing GET request
+
+# Action for downloading a buying list, processing GET request
 @api_view(["GET"])
 @permission_classes([IsAuthenticatedOrReadOnly])
 def download_shopping_cart(request):

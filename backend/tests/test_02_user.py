@@ -1,7 +1,5 @@
 import pytest
-
 from django.contrib.auth import get_user_model
-
 
 User = get_user_model()
 
@@ -19,7 +17,6 @@ class TestUsersAuth:
         first_name='Test2',
         last_name='Test2',
     )
-
 
     @pytest.mark.django_db(transaction=True)
     def test_login(self, testuser, client):

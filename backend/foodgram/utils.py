@@ -4,7 +4,10 @@ from rest_framework.response import Response
 
 from .models import Recipe
 
-##This is a repetitive code snippets that are used in ShoppingCartView and FavoriteView
+# This is a repetitive code snippets that are used in
+# ShoppingCartView and FavoriteView
+
+
 def custom_post(self, request, id, custom_serializer, field):
     user = request.user
     data = {"user": user.id, field: id}
