@@ -84,7 +84,8 @@ def tags_list():
     from foodgram.models import Tag
 
     data = [
-        {'id': 1, 'name': 'Breakfast', 'slug': 'breakfast', 'color': '#E26C2D'},
+        {'id': 1, 'name': 'Breakfast',
+            'slug': 'breakfast', 'color': '#E26C2D'},
         {'id': 2, 'name': 'Dinner', 'slug': 'dinner', 'color': '#32CD32'},
         {'id': 3, 'name': 'Supper', 'slug': 'supper', 'color': '#000080'},
     ]
