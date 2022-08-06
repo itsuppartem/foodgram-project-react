@@ -26,11 +26,10 @@ Add to shopping list.
 Download shopping list.
 
 # You can do test-clicking right now
-*_______________________________________________
-Home page http://51.250.98.29/signin
-Admin zone http://51.250.98.29/admin/
-API http://51.250.98.29/api/
-API Redoc http://51.250.98.29/api/docs/
+* Home page http://51.250.98.29/signin
+* Admin zone http://51.250.98.29/admin/
+* API http://51.250.98.29/api/
+* API Redoc http://51.250.98.29/api/docs/
 
 ## Preparations for project launch
 ### Clone repository to your machine:
