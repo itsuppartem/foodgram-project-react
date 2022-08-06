@@ -48,7 +48,7 @@ sudo apt install docker.io
 sudo curl -L "https://github.com/docker/compose/releases/download/1.29.2/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
 sudo chmod +x /usr/local/bin/docker-compose
 ```
-* Edit infra/default.conf in stirng "server_name" type your IP
+* Edit infra/default.conf in string "server_name" type your IP
 * Copy docker-compose.yml and default.conf from infra directory to your remote VM:
 ```
 scp docker-compose.yml <username>@<host>:/home/<username>/docker-compose.yml
