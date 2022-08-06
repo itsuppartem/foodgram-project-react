@@ -55,7 +55,7 @@ scp docker-compose.yml <username>@<host>:/home/<username>/docker-compose.yml
 scp default.conf <username>@<host>:/home/<username>/default.conf
 ```
 
-* Create .env file, fullfill with conten below or just copy ".env example" and rename it:
+* Create .env file, fullfill with content below or just copy ".env example" and rename it:
     ```
     DB_ENGINE=django.db.backends.postgresql -Choose db engine
     DB_NAME=postgres -Db name
