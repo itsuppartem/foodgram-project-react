@@ -5,6 +5,7 @@ from rest_framework.validators import UniqueTogetherValidator, ValidationError
 from users.serializers import CustomUserManipulateSerializer
 from . import models
 
+#this block converts information stored in a database, defined using Django models, into a format that is easily and efficiently passed through an API.
 
 class TagSerializer(serializers.ModelSerializer):
     class Meta:
@@ -116,12 +117,12 @@ class CreateRecipeSerializer(serializers.ModelSerializer):
             ingredient_id = ingredient['id']
             if ingredient_id in ingredients_list:
                 raise ValidationError(
-                    'Есть задублированные ингредиенты!'
+                    'Ingredient dublicates error!'
                 )
             ingredients_list.append(ingredient_id)
         if data['cooking_time'] <= 0:
             raise ValidationError(
-                'Время приготовления должно быть больше 0!'
+                'Cooking time must be above 0!'
             )
         return data
 
@@ -168,7 +169,7 @@ class FavoriteSerializer(serializers.ModelSerializer):
             UniqueTogetherValidator(
                 queryset=models.Favorite.objects.all(),
                 fields=('user', 'recipe'),
-                message='Рецепт уже добавлен в избранное'
+                message='You have already favourited this recipe!'
             )
         ]
 

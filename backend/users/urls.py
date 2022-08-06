@@ -4,6 +4,8 @@ from rest_framework.routers import DefaultRouter
 
 from .views import CustomUserViewSet
 
+#This block defines the URLs that will provide access to each view.
+
 router = DefaultRouter()
 router.register("users", CustomUserViewSet)
 urlpatterns = [

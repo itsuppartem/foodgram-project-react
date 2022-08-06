@@ -5,6 +5,10 @@ from .models import Ingredient, Recipe, Tag
 
 
 class RecipeFilter(filters.FilterSet):
+    """
+    This filter allows you to filter recipes
+    by tags, favourited sign and buying list sign
+    """
     tags = filters.ModelMultipleChoiceFilter(
         field_name="tags__slug",
         to_field_name="slug",
@@ -38,6 +42,10 @@ class RecipeFilter(filters.FilterSet):
 
 
 class IngredientFilter(filters.FilterSet):
+    """
+    This filter allows you to filter ingredients
+    by their names
+    """
     name = filters.CharFilter(field_name="name", lookup_expr="startswith")
 
     class Meta:
@@ -46,4 +54,8 @@ class IngredientFilter(filters.FilterSet):
 
 
 class IngredientSearchFilter(SearchFilter):
+    """
+    This filter allows you to search ingredients
+    by typing several first letters
+    """
     search_param = "name"

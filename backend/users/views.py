@@ -12,6 +12,10 @@ from .serializers import (CustomUserManipulateSerializer, CustomUserSerializer,
 
 
 class CustomUserViewSet(DjoserUserViewSet):
+    """
+    Handler function for the processing GET, POST, DEL requests for
+    User objects.
+    """
     queryset = User.objects.all()
     serializer_class = CustomUserManipulateSerializer
     permission_classes = [
@@ -43,7 +47,7 @@ class CustomUserViewSet(DjoserUserViewSet):
             serializer.save()
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         follow.delete()
-        return Response("Удалено", status=status.HTTP_204_NO_CONTENT)
+        return Response("Deleted", status=status.HTTP_204_NO_CONTENT)
 
     @action(
         methods=["get"],

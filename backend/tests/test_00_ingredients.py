@@ -13,11 +13,11 @@ class TestIngredients:
         ), 'Проверьте, что id ингредиента создается правильно.'
 
         assert (
-            ingredient_1['name'] == 'жижа'
+            ingredient_1['name'] == 'jija'
         ), 'Проверьте, что имя ингредиента создается правильно.'
 
         assert (
-            ingredient_1['measurement_unit'] == 'л'
+            ingredient_1['measurement_unit'] == 'l'
         ), 'Проверьте, что единица измерения ингредиента создается правильно.'
 
         assert (
@@ -25,11 +25,11 @@ class TestIngredients:
         ), 'Проверьте, что id ингредиента создается правильно.'
 
         assert (
-            ingredient_2['name'] == 'пальцы'
+            ingredient_2['name'] == 'fingers'
         ), 'Проверьте, что имя ингредиента создается правильно.'
 
         assert (
-            ingredient_2['measurement_unit'] == 'кг'
+            ingredient_2['measurement_unit'] == 'kg'
         ), 'Проверьте, что единица измерения ингредиента создается правильно.'
 
         assert (
@@ -37,9 +37,9 @@ class TestIngredients:
         ), 'Проверьте, что id ингредиента создается правильно.'
 
         assert (
-            ingredient_3['name'] == 'пудра'
+            ingredient_3['name'] == 'powder'
         ), 'Проверьте, что имя ингредиента создается правильно.'
 
         assert (
-            ingredient_3['measurement_unit'] == 'гр'
+            ingredient_3['measurement_unit'] == 'gr'
         ), 'Проверьте, что единица измерения ингредиента создается правильно.'

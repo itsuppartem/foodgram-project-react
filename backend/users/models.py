@@ -3,36 +3,41 @@ from django.db import models
 
 
 class User(AbstractUser):
-
+    """
+    This model is used to create User
+    """
     USERNAME_FIELD = "email"
     REQUIRED_FIELDS = ("username", "first_name", "last_name")
 
     username = models.CharField(
-        "Имя пользователя",
+        "Username",
         max_length=150,
         unique=True,
     )
     email = models.EmailField(
-        "Электронная почта",
+        "Email",
         max_length=254,
         unique=True,
     )
     first_name = models.CharField(
-        "Имя",
+        "Name",
         max_length=150,
     )
     last_name = models.CharField(
-        "Фамилия",
+        "Surname",
         max_length=150,
     )
     is_subscribed = models.BooleanField(
         default=False,
-        verbose_name='Подписка на данного пользователя',
-        help_text='Отметьте для подписки на данного пользователя'
+        verbose_name='Subsribed boolean',
+        help_text='True for subscribe'
     )
 
 
 class Follow(models.Model):
+    """
+    This model is used to create Subscription
+    """
     user = models.ForeignKey(
         User,
         on_delete=models.CASCADE,
@@ -43,8 +48,8 @@ class Follow(models.Model):
         related_name="following")
 
     class Meta:
-        verbose_name = "Фоллоу"
-        verbose_name_plural = "Фоллоус"
+        verbose_name = "Subscription"
+        verbose_name_plural = "Subscriptions"
         constraints = [
             models.UniqueConstraint(fields=['user', 'author'],
                                     name='unique_follow')

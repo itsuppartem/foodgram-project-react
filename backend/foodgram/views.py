@@ -17,6 +17,10 @@ User = get_user_model()
 
 
 class IngredientsView(viewsets.ModelViewSet):
+    """
+    Handler function for the processing of the Ingredient objects through
+    GET request
+    """
     queryset = models.Ingredient.objects.all()
     serializer_class = serializers.IngredientSerializer
     permission_classes = [IsAuthenticatedOrReadOnly, ]
@@ -26,6 +30,10 @@ class IngredientsView(viewsets.ModelViewSet):
 
 
 class TagView(viewsets.ModelViewSet):
+    """
+    Handler function for the processing of the Tag objects through
+    GET request
+    """
     queryset = models.Tag.objects.all()
     serializer_class = serializers.TagSerializer
     permissions = (AllowAny,)
@@ -33,6 +41,10 @@ class TagView(viewsets.ModelViewSet):
 
 
 class RecipeView(viewsets.ModelViewSet):
+    """
+    Handler function for the processing of the Recipe objects through
+    the further requests: GET, POST, PATCH, DEL.
+    """
     queryset = models.Recipe.objects.all()
     serializer_class = serializers.CreateRecipeSerializer
     permissions = (IsOwnerOrReadOnly,)
@@ -53,6 +65,10 @@ class RecipeView(viewsets.ModelViewSet):
 
 
 class FavoriteView(APIView):
+    """
+    Handler function for the processing GET, POST, DEL requests for
+    Favourite objects.
+    """
     permission_classes = [
         IsAuthenticatedOrReadOnly,
     ]
@@ -71,7 +87,11 @@ class FavoriteView(APIView):
         return custom_delete(self, request, recipe_id, models.Favorite)
 
 
-class ShoppingCartViewSet(APIView):
+class ShoppingCartView(APIView):
+    """
+    Handler function for the processing GET, POST, DEL requests for
+    Buying list objects.
+    """
     permission_classes = [IsAuthenticatedOrReadOnly, ]
     serializer_class = serializers.ShoppingCartSerializer
     filterset_class = RecipeFilter
@@ -85,7 +105,7 @@ class ShoppingCartViewSet(APIView):
     def delete(self, request, recipe_id):
         return custom_delete(self, request, recipe_id, models.ShoppingCart)
 
-
+#Action for downloading a buying list, processing GET request
 @api_view(["GET"])
 @permission_classes([IsAuthenticatedOrReadOnly])
 def download_shopping_cart(request):

@@ -6,6 +6,11 @@ admin.site.register(models.Follow)
 
 
 class FollowAdmin(admin.ModelAdmin):
+    """
+    Adds and shows specifed fields of
+    Follow model in Admin-zone.
+    Names of constants speak for themselves.
+    """
     list_display = ("user", "author")
     autocomplete_fields = ("author", "user")
     search_fields = ("user", "author",)
@@ -13,6 +18,11 @@ class FollowAdmin(admin.ModelAdmin):
 
 @admin.register(models.User)
 class UserAdmin(admin.ModelAdmin):
+    """
+    Adds and shows specifed fields of
+    User model in Admin-zone.
+    Names of constants speak for themselves.
+    """
     fields = ("username", "first_name", "last_name", "email")
     search_fields = ("username",)
     list_filter = ("username", "email")

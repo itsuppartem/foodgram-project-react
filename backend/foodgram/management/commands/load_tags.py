@@ -10,9 +10,12 @@ DATA_ROOT = os.path.join(settings.BASE_DIR, 'data')
 
 
 class Command(BaseCommand):
-
+    """
+    Command which allows you to upload .csv file with tags
+    For localizations purposes TagsEN is hardcoded
+    """
     def add_arguments(self, parser):
-        parser.add_argument('filename', default='tags.csv', nargs='?',
+        parser.add_argument('filename', default='tagsEN.csv', nargs='?',
                             type=str)
 
     def handle(self, *args, **options):
@@ -27,4 +30,4 @@ class Command(BaseCommand):
                         slug=row[2]
                     )
         except FileNotFoundError:
-            raise CommandError('Добавьте файл tags в директорию data')
+            raise CommandError('Add tagsEN.csv to /data/ directory')
