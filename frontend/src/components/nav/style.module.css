@@ -33,7 +33,7 @@
 }
 
 .nav__item_active {
-    color: #5cee57;
+    color: #a23eff;
 }
 .nav__item_active:after {
     content: '';
@@ -43,7 +43,7 @@
     left: 0;
     width: 100%;
     height: 2px;
-    background: #5cee57;
+    background: #a23eff;
 }
 
 .nav__link {
@@ -58,14 +58,14 @@
 }
 
 .nav__link_active {
-  border-bottom: 1px solid #5cee57;
-  color: #5cee57;
+  border-bottom: 1px solid #a23eff;
+  color: #a23eff;
 }
 
 .orders-count {
   display: inline-block;
   padding: 0px 12px;
-  background: #5cee57;
+  background: #a23eff;
   color: #FFF;
   font-weight: 500;
   height: 24px;
