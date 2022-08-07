@@ -141,7 +141,7 @@ def download_shopping_cart(request):
                                        'filename="shopping_list.pdf"')
     page = canvas.Canvas(response)
     page.setFont('RunicRegular', size=32)
-    page.drawString(200, 800, 'Список покупок')
+    page.drawString(200, 800, 'Buying list')
     page.setFont('RunicRegular', size=18)
     height = 760
     for i, (name, data) in enumerate(buying_list.items(), 1):
