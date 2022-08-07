@@ -13,31 +13,73 @@
 
 
 **«Foodgram»** - is django-based online service, with API(Django REST framework). 
-Things that are avialable:
+* Things that are avialable:
 
-Full user authentication.
-CRUD new recipe.
-Filter by tags.
-Choose from a bunch of ingredients.
-Add to favourites.
-Favourites page.
-Follow another authors.
-Add to shopping list.
-Download shopping list.
+```
+* Full user authentication.
+* CRUD new recipe.
+* Filter by tags.
+* Choose from a bunch of ingredients.
+* Add to favourites.
+* Favourites page.
+* Follow another authors.
+* Add to shopping list.
+* Download shopping list.
+```
 
 # You can do test-clicking right now
+```
 * Home page http://51.250.98.29/signin
 * Admin zone http://51.250.98.29/admin/
 * API http://51.250.98.29/api/
 * API Redoc http://51.250.98.29/api/docs/ 
+```
 # API endpoints
+
+- Users
+```
 * http://51.250.98.36/api/users/ GET POST
 * http://51.250.98.36/api/users/{id}/ GET
 * http://51.250.98.36/api/users/me/ GET
 * http://51.250.98.36/api/users/set_password/ POST
 * http://51.250.98.36/api/auth/token/login/ POST
 * http://51.250.98.36/api/auth/token/logout/ POST
+```
 
+- Tags
+```
+* http://51.250.98.36/api/tags/ GET
+* http://51.250.98.36/api/tags/{id}/ GET
+```
+
+- Recipes
+``` 
+* http://51.250.98.36/api/recipes/ GET POST
+* http://51.250.98.36/api/recipes/{id}/ GET PATCH DELETE
+```
+
+- Buying list
+```
+* http://51.250.98.36/api/recipes/download_shopping_cart/ GET
+* http://51.250.98.36/api/recipes/{id}/shopping_cart/ POST DELETE
+```
+
+- Favourites
+``` 
+* http://51.250.98.36/api/recipes/{id}/favorite/ POST DELETE
+```
+
+- Subscribes
+```
+* http://51.250.98.36/api/users/subscriptions/ GET
+* http://51.250.98.36/api/users/{id}/subscribe/ POST DELETE
+```
+
+- Ingredients 
+``` 
+* http://51.250.98.36/api/ingredients/ GET
+* http://51.250.98.36/api/ingredients/{id}/ GET
+```
 ## Preparations for project launch
 ### Clone repository to your machine:
 ```
@@ -96,10 +138,12 @@ scp default.conf <username>@<host>:/home/<username>/default.conf
     TELEGRAM_TOKEN=<Telegram bot token>
     ```
     Workflow consists of three steps:
+
      - PEP8 check
      - Build and push Backend and Frontend images to DockerHub.
      - Deploy on remote VM.
-     - Greetings in telegram from bot if workflow succed.  
+     - Greetings in telegram from bot if workflow succed.
+    
   
 * Use build command of docker-compose:
 ```
@@ -130,8 +174,8 @@ sudo docker-compose up -d --build
 
 ### Backend and Edited Frontend by:
 Guliaev Artem / Гуляев Артем <br />
-[Github](https://github.com/itsuppartem) <br />
-[Email me](mailto:itsuppartem@yandex.ru)
+- [Github](https://github.com/itsuppartem) <br />
+- [Email me](mailto:itsuppartem@yandex.ru)
 
 ### Original Frontend by:
-https://github.com/yandex-praktikum/foodgram-project-react
+- https://github.com/yandex-praktikum/foodgram-project-react
