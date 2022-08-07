@@ -15,7 +15,7 @@ class Command(BaseCommand):
     For localizations purposes IngredientsEN is hardcoded
     """
     def add_arguments(self, parser):
-        parser.add_argument('filename', default='ingredientsRU.csv', nargs='?',
+        parser.add_argument('filename', default='ingredientsEN.csv', nargs='?',
                             type=str)
 
     def handle(self, *args, **options):
