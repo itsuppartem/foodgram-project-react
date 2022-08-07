@@ -29,14 +29,7 @@ Download shopping list.
 * Home page http://51.250.98.29/signin
 * Admin zone http://51.250.98.29/admin/
 * API http://51.250.98.29/api/
-* API Redoc http://51.250.98.29/api/docs/ 
-# API endpoints
-* http://51.250.98.36/api/users/ GET POST
-* http://51.250.98.36/api/users/{id}/ GET
-* http://51.250.98.36/api/users/me/ GET
-* http://51.250.98.36/api/users/set_password/ POST
-* http://51.250.98.36/api/auth/token/login/ POST
-* http://51.250.98.36/api/auth/token/logout/ POST
+* API Redoc http://51.250.98.29/api/docs/
 
 ## Preparations for project launch
 ### Clone repository to your machine:
