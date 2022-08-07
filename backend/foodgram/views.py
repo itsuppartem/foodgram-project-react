@@ -110,17 +110,42 @@ class ShoppingCartView(APIView):
 @api_view(["GET"])
 @permission_classes([IsAuthenticatedOrReadOnly])
 def download_shopping_cart(request):
-    user = request.user
-    ingredients = models.IngredientInRecipe.objects.filter(
-        recipe__in=(user.is_in_shopping_cart.values('recipe_id'))).values(
-            ingredients=F('ingredient__name'),
-            measure=F('ingredient__measurement_unit')).annotate(
-                amount_sum=Sum('amount'))
-    content = ([f'{item["ingredients"]} ({item["measure"]})'
-               f'- {item["amount_sum"]}\n'
-                for item in ingredients])
-    response = HttpResponse(content, content_type='text/plain')
-    response['Content-Disposition'] = (
-        f'attachment; filename={"shopping_list.txt"}'
-    )
+    shopping_cart = models.ShoppingCart.objects.filter(user=request.user)
+    buying_list = {}
+    for record in shopping_cart:
+        recipe = record.recipe
+        ingredients = models.IngredientInRecipe.objects.filter(recipe=recipe)
+        for ingredient in ingredients:
+            amount = ingredient.amount
+            name = ingredient.ingredient.name
+            measurement_unit = ingredient.ingredient.measurement_unit
+            if name not in buying_list:
+                buying_list[name] = {
+                    "measurement_unit": measurement_unit,
+                    "amount": amount,
+                }
+            else:
+                buying_list[name]["amount"] = (
+                    buying_list[name]["amount"] + amount
+                )
+    wishlist = []
+    for name, data in buying_list.items():
+        wishlist.append(
+            f"{name} - {data['amount']} ({data['measurement_unit']})\n")
+    pdfmetrics.registerFont(TTFont("RunicRegular", "data/RunicRegular.ttf",
+                                   "UTF-8"))
+    response = HttpResponse(content_type="application/pdf")
+    response["Content-Disposition"] = ('attachment; '
+                                       'filename="shopping_list.pdf"')
+    page = canvas.Canvas(response)
+    page.setFont('RunicRegular', size=32)
+    page.drawString(200, 800, 'Список покупок')
+    page.setFont('RunicRegular', size=18)
+    height = 760
+    for i, (name, data) in enumerate(buying_list.items(), 1):
+        page.drawString(55, height, (f'{i}. {name} - {data["amount"]} '
+                                     f'{data["measurement_unit"]}'))
+        height -= 30
+    page.showPage()
+    page.save()
     return response
