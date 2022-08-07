@@ -4,7 +4,7 @@ export default [
     href: '/recipes',
     auth: false
   },{
-    title: 'My supscriptions',
+    title: 'My subscriptions',
     href: '/subscriptions',
     auth: true
   },{

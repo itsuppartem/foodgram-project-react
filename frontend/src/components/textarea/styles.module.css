@@ -36,7 +36,7 @@
     width: 100%;
 }
 .textareaField:focus {
-    border: 1px solid #4A61DD;
+    border: 1px solid #5cee57;
     box-shadow: 0px 1px 4px rgba(0, 0, 0, 0.1);
 }
 

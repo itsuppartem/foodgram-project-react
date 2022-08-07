@@ -99,7 +99,7 @@ const SingleCard = ({ loadItem, updateOrders }) => {
               }}
             >
               
-            {is_in_shopping_cart ? <><Icons.DoneIcon color="#4A61DD"/>Recipe has added</> : <><Icons.PlusIcon /> Add to buying list</>}
+            {is_in_shopping_cart ? <><Icons.DoneIcon color="#5cee57"/>Recipe has added</> : <><Icons.PlusIcon /> Add to buying list</>}
             </Button>}
             {(userContext || {}).id !== author.id && authContext && <Button
               className={styles['single-card__button']}

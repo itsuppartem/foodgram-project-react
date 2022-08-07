@@ -121,10 +121,10 @@ sudo docker-compose up -d --build
     ```
     - Enjoy your project
 
-### Backend by:
+### Backend and Edited Frontend by:
 Guliaev Artem / Гуляев Артем <br />
 [Github](https://github.com/itsuppartem) <br />
 [Email me](mailto:itsuppartem@yandex.ru)
 
-### Frontend by:
+### Original Frontend by:
 https://github.com/yandex-praktikum/foodgram-project-react
