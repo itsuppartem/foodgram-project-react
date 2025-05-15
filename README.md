@@ -27,13 +27,6 @@
 * Download shopping list.
 ```
 
-# You can do test-clicking right now
-```
-* Home page http://51.250.98.29/signin
-* Admin zone http://51.250.98.29/admin/
-* API http://51.250.98.29/api/
-* API Redoc http://51.250.98.29/api/docs/ 
-```
 # API endpoints
 
 - Users
