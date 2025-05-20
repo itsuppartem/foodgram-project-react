@@ -1,7 +1,0 @@
-DB_ENGINE=django.db.backends.postgresql #Choose db engine
-DB_NAME=postgres #Db name
-POSTGRES_USER=postgres #Db connection login
-POSTGRES_PASSWORD=postgres #Db connection password
-DB_HOST=db #Name of the container
-DB_PORT=5432 #Port for db connection
-SECRET_KEY=stinking_wind #django prject secret key

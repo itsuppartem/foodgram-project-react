@@ -5,7 +5,7 @@ __pycache__/
 
 # C extensions
 *.so
-
+.backend_static/
 # Distribution / packaging
 .Python
 build/
@@ -93,7 +93,9 @@ ipython_config.py
 
 # PEP 582; used by e.g. github.com/David-OConnor/pyflow
 __pypackages__/
-
+backend_static/
+media/
+static/
 # Celery stuff
 celerybeat-schedule
 celerybeat.pid

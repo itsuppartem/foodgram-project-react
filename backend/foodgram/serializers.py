@@ -1,6 +1,9 @@
 from drf_extra_fields.fields import Base64ImageField
 from rest_framework import serializers
 from rest_framework.validators import UniqueTogetherValidator, ValidationError
+from django.core.cache import cache
+from django.conf import settings
+from typing import Dict, Any, List
 
 from users.serializers import CustomUserManipulateSerializer
 from . import models
@@ -181,3 +184,32 @@ class ShoppingCartSerializer(FavoriteSerializer):
     class Meta:
         model = models.ShoppingCart
         fields = ["recipe", "user"]
+
+
+class RecipeSerializer(serializers.ModelSerializer):
+    def to_representation(self, instance: models.Recipe) -> Dict[str, Any]:
+        cache_key = f'recipe_{instance.id}'
+        cached_data = cache.get(cache_key)
+        if cached_data:
+            return cached_data
+            
+        data = super().to_representation(instance)
+        cache.set(cache_key, data, settings.CACHE_TTL)
+        return data
+
+    def validate(self, data: Dict[str, Any]) -> Dict[str, Any]:
+        ingredients = self.initial_data.get('ingredients', [])
+        if not ingredients:
+            raise ValidationError('Рецепт должен содержать хотя бы один ингредиент')
+            
+        ingredients_list: List[int] = []
+        for ingredient in ingredients:
+            ingredient_id = ingredient['id']
+            if ingredient_id in ingredients_list:
+                raise ValidationError('Ингредиенты не должны повторяться')
+            ingredients_list.append(ingredient_id)
+            
+        if data['cooking_time'] <= 0:
+            raise ValidationError('Время приготовления должно быть больше 0')
+            
+        return data

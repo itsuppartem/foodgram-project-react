@@ -24,10 +24,13 @@ class Command(BaseCommand):
                       encoding='utf-8') as f:
                 data = csv.reader(f)
                 for row in data:
-                    name, measurement_unit = row
-                    Ingredient.objects.get_or_create(
-                        name=name,
-                        measurement_unit=measurement_unit
-                    )
+                    if len(row) >= 2:
+                        name = row[0].strip()
+                        measurement_unit = row[1].strip()
+                        if name and measurement_unit:
+                            Ingredient.objects.get_or_create(
+                                name=name,
+                                measurement_unit=measurement_unit
+                            )
         except FileNotFoundError:
             raise CommandError('Add ingredients.csv to /data/ directory')

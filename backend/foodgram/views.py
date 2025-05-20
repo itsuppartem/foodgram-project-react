@@ -8,6 +8,9 @@ from rest_framework import viewsets
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import AllowAny, IsAuthenticatedOrReadOnly
 from rest_framework.views import APIView
+from django.core.cache import cache
+from django.db.models import Prefetch
+from django.conf import settings
 
 from . import models, serializers
 from .filters import IngredientFilter, RecipeFilter
@@ -47,7 +50,13 @@ class RecipeView(viewsets.ModelViewSet):
     Handler function for the processing of the Recipe objects through
     the further requests: GET, POST, PATCH, DEL.
     """
-    queryset = models.Recipe.objects.all()
+    queryset = models.Recipe.objects.select_related(
+        'author'
+    ).prefetch_related(
+        Prefetch('ingredients', queryset=models.Ingredient.objects.only('name', 'measurement_unit')),
+        Prefetch('tags', queryset=models.Tag.objects.only('name', 'color', 'slug')),
+        'ingredients_amount'
+    )
     serializer_class = serializers.CreateRecipeSerializer
     permissions = (IsOwnerOrReadOnly,)
     filterset_class = RecipeFilter
@@ -64,6 +73,16 @@ class RecipeView(viewsets.ModelViewSet):
         context = super().get_serializer_context()
         context.update({"request": self.request})
         return context
+
+    def list(self, request, *args, **kwargs):
+        cache_key = f'recipe_list_{request.query_params}'
+        cached_data = cache.get(cache_key)
+        if cached_data:
+            return Response(cached_data)
+            
+        response = super().list(request, *args, **kwargs)
+        cache.set(cache_key, response.data, settings.CACHE_TTL)
+        return response
 
 
 class FavoriteView(APIView):
@@ -112,7 +131,17 @@ class ShoppingCartView(APIView):
 @api_view(["GET"])
 @permission_classes([IsAuthenticatedOrReadOnly])
 def download_shopping_cart(request):
-    shopping_cart = models.ShoppingCart.objects.filter(user=request.user)
+    cache_key = f'shopping_cart_{request.user.id}'
+    cached_data = cache.get(cache_key)
+    if cached_data:
+        return cached_data
+        
+    shopping_cart = models.ShoppingCart.objects.select_related(
+        'recipe'
+    ).prefetch_related(
+        'recipe__ingredients_amount__ingredient'
+    ).filter(user=request.user)
+    
     buying_list = {}
     for record in shopping_cart:
         recipe = record.recipe
@@ -150,4 +179,5 @@ def download_shopping_cart(request):
         height -= 30
     page.showPage()
     page.save()
+    cache.set(cache_key, response, settings.CACHE_TTL)
     return response

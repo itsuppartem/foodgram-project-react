@@ -1,6 +1,7 @@
 from django.contrib.auth import get_user_model
 from django.core.validators import MinValueValidator
 from django.db import models
+from typing import Any, Dict
 
 User = get_user_model()
 
@@ -9,18 +10,18 @@ class Tag(models.Model):
     """
     This model is used to create tags.
     """
-    name = models.CharField(
+    name: str = models.CharField(
         max_length=250,
         verbose_name="Tag",
         help_text="Tags name")
 
-    color = models.CharField(
+    color: str = models.CharField(
         max_length=7,
         default="#ffffff",
         verbose_name="HEX colour",
         help_text="Tags colour")
 
-    slug = models.SlugField(
+    slug: str = models.SlugField(
         unique=True,
         verbose_name="Slug",
         help_text="Tags slug")
@@ -30,7 +31,7 @@ class Tag(models.Model):
         verbose_name = "Tag"
         verbose_name_plural = "Tags"
 
-    def __str__(self):
+    def __str__(self) -> str:
         return self.name
 
 
@@ -45,7 +46,7 @@ class Ingredient(models.Model):
     )
 
     measurement_unit = models.CharField(
-        max_length=10,
+        max_length=50,
         verbose_name="Measurement units",
         help_text="Input measurement units",
     )
@@ -67,7 +68,7 @@ class Recipe(models.Model):
     """
     This model is used to create recipe
     """
-    author = models.ForeignKey(
+    author: User = models.ForeignKey(
         User,
         verbose_name="Author",
         on_delete=models.CASCADE,
@@ -91,7 +92,7 @@ class Recipe(models.Model):
         verbose_name="Description",
         help_text="How this thing should be cooked"
     )
-    cooking_time = models.PositiveSmallIntegerField(
+    cooking_time: int = models.PositiveSmallIntegerField(
         verbose_name="Cooking time",
         help_text="Input cooking time in minutes",
         validators=[MinValueValidator(1)],
@@ -119,8 +120,16 @@ class Recipe(models.Model):
         verbose_name = "Recipe"
         verbose_name_plural = "Recipes"
 
-    def __str__(self):
+    def __str__(self) -> str:
         return self.name
+
+    def to_dict(self) -> Dict[str, Any]:
+        return {
+            'id': self.id,
+            'name': self.name,
+            'author': self.author.username,
+            'cooking_time': self.cooking_time
+        }
 
 
 class TagsInRecipe(models.Model):
